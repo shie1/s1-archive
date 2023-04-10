@@ -3,9 +3,14 @@ import type { NextPage } from 'next'
 import Link from 'next/link'
 import { TypeAnimation } from 'react-type-animation'
 import { CollectionsBookmark } from '@mui/icons-material';
+import Head from 'next/head';
 
 const Home: NextPage = () => {
   return (<>
+    <Head>
+      <title>archv</title>
+      <meta name="description" content="Shie1bi archívum." />
+    </Head>
     <Stack spacing={2} sx={(theme) => ({ padding: `${theme.spacing(8)} 0` })}>
       <Stack direction="row" spacing={2}>
         <Typography whiteSpace="pre-wrap" variant='h1' component="h1">

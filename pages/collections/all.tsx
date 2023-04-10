@@ -3,12 +3,16 @@ import type { NextPage } from "next";
 import { ImageList, ImageListItem, useTheme, useMediaQuery } from "@mui/material"
 import { apiCall } from "@/components/api";
 import { collectionSummary } from "../api/collections/all";
+import Head from "next/head";
 
 const Library: NextPage = (props: any) => {
     const theme = useTheme()
     const breakList = [useMediaQuery(theme.breakpoints.down('sm')), useMediaQuery(theme.breakpoints.down('md'))]
 
     return (<>
+        <Head>
+            <title>Könyvtár • archv</title>
+        </Head>
         <ImageList variant="masonry" cols={(() => {
             switch (breakList.indexOf(true)) {
                 case 0:

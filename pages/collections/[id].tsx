@@ -6,6 +6,7 @@ import { Badge, BadgeProps, Stack, Table, TableHead, TableRow, TableBody, Typogr
 import { PlayArrow, Queue } from "@mui/icons-material";
 import { PlayerContext, usePlayerControls } from "../_app";
 import { useContext } from "react";
+import Head from "next/head";
 
 const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
     '& .MuiBadge-badge': {
@@ -25,6 +26,9 @@ const Collection: NextPage = (props: any) => {
     const player = useContext(PlayerContext)
 
     return (<>
+        <Head>
+            <title>{collection.collection.name} • archv</title>
+        </Head>
         <Stack direction={breakImage ? "column" : "row"} spacing={2} alignItems="center">
             <StyledBadge badgeContent={collection.items.length} color="secondary" overlap="rectangular" anchorOrigin={{ horizontal: 'right', vertical: 'top' }}>
                 <Image alt={collection.collection.name} height={250} width={250} src={collection.collection.image ? collection.collection.image : `/img/collections/${collection.collection.id}.jpg`}></Image>

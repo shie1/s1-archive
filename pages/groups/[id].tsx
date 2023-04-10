@@ -3,6 +3,7 @@ import type { NextPage } from "next";
 import Image from "next/image";
 import { group } from "../api/groups/[id]";
 import { Avatar, Badge, BadgeProps, Stack, Typography, styled, useMediaQuery, useTheme } from "@mui/material";
+import Head from "next/head";
 
 const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
     '& .MuiBadge-badge': {
@@ -19,6 +20,9 @@ const Group: NextPage = (props: any) => {
     const breakImage = useMediaQuery(theme.breakpoints.down('sm'))
 
     return (<>
+        <Head>
+            <title>{group.name} • archv</title>
+        </Head>
         <Stack direction={breakImage ? "column" : "row"} spacing={2} alignItems="center">
             <StyledBadge badgeContent={group.items} color="secondary" overlap="circular" anchorOrigin={{ horizontal: 'right', vertical: 'top' }}>
                 <Avatar sx={(theme) => ({ width: 250, height: 250 })} src={group.image ? group.image : `/img/groups/${group.id}.jpg`}></Avatar>
