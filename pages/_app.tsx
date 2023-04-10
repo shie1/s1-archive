@@ -80,7 +80,7 @@ export default function App({ Component, pageProps }: AppProps) {
       }
     },
     next: () => {
-      if (player.current) player.current.currentTime = player.current.duration
+      if (player.current) player.current.currentTime = player.current.duration;
     },
     previous: () => {
       if (player.current) {
@@ -251,7 +251,8 @@ export default function App({ Component, pageProps }: AppProps) {
             pl.setContent(pl.queue[0])
             pl.setQueue(pl.queue.slice(1))
           } else {
-            pl.setSrc("")
+            pl.setContent(undefined)
+            setControlsOpen(false)
           }
         }} />
       </PlayerContext.Provider>
