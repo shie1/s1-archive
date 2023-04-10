@@ -36,14 +36,14 @@ function ResponsiveAppBar() {
     };
 
     return (
-        <AppBar position="static" sx={{backgroundImage: 'unset'}}>
+        <AppBar position="static" sx={{ backgroundImage: 'unset' }}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     <CollectionsBookmark sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
                     <Typography
                         variant="h6"
                         noWrap
-                        component="a"
+                        component={Link}
                         href="/"
                         sx={{
                             mr: 2,
@@ -100,8 +100,8 @@ function ResponsiveAppBar() {
                     <Typography
                         variant="h5"
                         noWrap
-                        component="a"
-                        href=""
+                        component={Link}
+                        href="/"
                         sx={{
                             mr: 2,
                             display: { xs: 'flex', md: 'none' },
