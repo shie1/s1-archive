@@ -5,10 +5,10 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import { Container, ThemeProvider, createTheme, CssBaseline, Paper, Stack, Typography, IconButton, Button, Slider, useTheme, useMediaQuery } from '@mui/material';
+import { Container, ThemeProvider, createTheme, CssBaseline, Paper, Stack, Typography, IconButton, Button, Slider, useTheme, useMediaQuery, Menu, MenuItem } from '@mui/material';
 import ResponsiveAppBar from '@/components/nav';
 import Image from 'next/image';
-import { Cancel, CancelOutlined, Pause, PlayArrow, SkipNext, SkipPrevious, VolumeDown, VolumeUp } from '@mui/icons-material';
+import { ArrowDropUp, Cancel, CancelOutlined, MoreVert, Pause, PlayArrow, SkipNext, SkipPrevious, Stop, VolumeDown, VolumeUp } from '@mui/icons-material';
 import { createContext, useEffect, useRef, useState } from 'react';
 import { content } from './api/collections/[id]';
 
@@ -65,7 +65,48 @@ export default function App({ Component, pageProps }: AppProps) {
   const footer = useRef<null | HTMLDivElement>(null)
   const pl = usePlayerControls()
   const player = useRef<HTMLAudioElement | null>(null)
-  const breakControls = useMediaQuery("max-width: 750px")
+  const breakControls = useMediaQuery("(max-width: 750px)")
+  const [controlsOpen, setControlsOpen] = useState(false)
+  const controlsAnchor = useRef<null | any>(null)
+
+  const playerActions = {
+    togglePlay: () => {
+      if (player.current) {
+        if (player.current.paused) {
+          player.current.play()
+        } else {
+          player.current.pause()
+        }
+      }
+    },
+    next: () => {
+      if (player.current) player.current.currentTime = player.current.duration
+    },
+    previous: () => {
+      if (player.current) {
+        if (pl.content) pl.setQueue([pl.content, ...pl.queue])
+        if (pl.history.length > 0) {
+          pl.setContent(pl.history[pl.history.length - 1])
+          pl.setHistory(pl.history.slice(0, pl.history.length - 1))
+        }
+      }
+    },
+    cancel: () => {
+      pl.setQueue([])
+      pl.setHistory([])
+      pl.setContent(undefined)
+      setControlsOpen(false)
+    },
+    toggleControls: () => {
+      setControlsOpen(!controlsOpen)
+    },
+  }
+
+  useEffect(() => {
+    if (!breakControls) {
+      setControlsOpen(false)
+    }
+  }, [breakControls])
 
   useEffect(() => {
     if (player.current) {
@@ -133,38 +174,71 @@ export default function App({ Component, pageProps }: AppProps) {
                   </Typography>
                 </Stack>
                 <Stack spacing={2} alignItems="center" direction="row">
-                  <Stack spacing={2} direction="row" alignItems="center">
-                    <VolumeDown />
-                    <Slider color='secondary' sx={{ width: '3rem' }} step={25} max={100} min={0} aria-label="Volume" value={pl.volume} onChange={(e, v) => pl.setVolume(v as number)} />
-                    <VolumeUp />
-                  </Stack>
                   <Stack direction="row" alignItems="center">
-                    <IconButton onClick={() => {
-                      pl.setQueue([])
-                      pl.setHistory([])
-                      pl.setContent(undefined)
-                    }}>
-                      <Cancel />
-                    </IconButton>
-                    <IconButton onClick={() => {
-                      if (player.current) {
-                        if (pl.content) pl.setQueue([pl.content, ...pl.queue])
-                        if (pl.history.length > 0) {
-                          pl.setContent(pl.history[pl.history.length - 1])
-                          pl.setHistory(pl.history.slice(0, pl.history.length - 1))
-                        }
-                      }
-                    }}>
-                      <SkipPrevious />
-                    </IconButton>
-                    <IconButton onClick={() => pl.setPlaying(!pl.playing)}>
-                      {pl.playing ? <Pause /> : <PlayArrow />}
-                    </IconButton>
-                    <IconButton onClick={() => {
-                      if (player.current) player.current.currentTime = player.current.duration
-                    }}>
-                      <SkipNext />
-                    </IconButton>
+                    {breakControls ?
+                      <>
+                        <IconButton ref={controlsAnchor} onClick={() => setControlsOpen(true)}>
+                          <MoreVert />
+                        </IconButton>
+                        <Menu
+                          open={controlsOpen}
+                          onClose={() => setControlsOpen(false)}
+                          anchorEl={controlsAnchor.current}
+                          sx={{ '& .MuiPaper-root': { width: '100vw' } }}
+                        >
+                          <MenuItem>
+                            <Stack sx={{ width: '100%' }} spacing={2} direction="row" alignItems="center">
+                              <VolumeDown />
+                              <Slider color='secondary' sx={{ width: '100%' }} max={100} min={0} aria-label="Volume" value={pl.volume} onChange={(e, v) => pl.setVolume(v as number)} />
+                              <VolumeUp />
+                            </Stack>
+                          </MenuItem>
+                          <Stack direction="row" justifyContent="space-between" sx={{ width: '100%' }}>
+                            <MenuItem onClick={playerActions.cancel}>
+                              <Stack spacing={2} direction="row-reverse" alignItems="center" sx={(theme) => ({ padding: theme.spacing(.5), width: '100%' })}>
+                                <Stop />
+                                Megállítás
+                              </Stack>
+                            </MenuItem>
+                            <MenuItem onClick={playerActions.previous}>
+                              <Stack spacing={2} direction="row-reverse" alignItems="center" sx={(theme) => ({ padding: theme.spacing(.5), width: '100%' })}>
+                                <SkipPrevious />
+                                Előző
+                              </Stack>
+                            </MenuItem>
+                            <MenuItem onClick={playerActions.togglePlay}>
+                              <Stack spacing={2} direction="row-reverse" alignItems="center" sx={(theme) => ({ padding: theme.spacing(.5), width: '100%' })}>
+                                {pl.playing ? <Pause /> : <PlayArrow />}
+                                Lejátszás/Szünet
+                              </Stack>
+                            </MenuItem>
+                            <MenuItem onClick={playerActions.next}>
+                              <Stack spacing={2} direction="row-reverse" alignItems="center" sx={(theme) => ({ padding: theme.spacing(.5), width: '100%' })}>
+                                <SkipNext />
+                                Következő
+                              </Stack>
+                            </MenuItem>
+                          </Stack>
+                        </Menu>
+                      </>
+                      : <>
+                        <Stack spacing={2} direction="row" alignItems="center">
+                          <VolumeDown />
+                          <Slider color='secondary' sx={{ width: '3rem' }} max={100} min={0} aria-label="Volume" value={pl.volume} onChange={(e, v) => pl.setVolume(v as number)} />
+                          <VolumeUp />
+                        </Stack>
+                        <IconButton onClick={playerActions.cancel}>
+                          <Stop />
+                        </IconButton>
+                        <IconButton onClick={playerActions.previous}>
+                          <SkipPrevious />
+                        </IconButton>
+                        <IconButton onClick={playerActions.togglePlay}>
+                          {pl.playing ? <Pause /> : <PlayArrow />}
+                        </IconButton>
+                        <IconButton onClick={playerActions.next}>
+                          <SkipNext />
+                        </IconButton></>}
                   </Stack>
                 </Stack>
               </Stack>
