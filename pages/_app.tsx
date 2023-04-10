@@ -8,8 +8,8 @@ import '@fontsource/roboto/700.css';
 import { Container, ThemeProvider, createTheme, CssBaseline, Paper, Stack, Typography, IconButton, Button } from '@mui/material';
 import ResponsiveAppBar from '@/components/nav';
 import Image from 'next/image';
-import { PlayArrow, SkipNext, SkipPrevious } from '@mui/icons-material';
-import { useRef, useState } from 'react';
+import { Cancel, CancelOutlined, Pause, PlayArrow, SkipNext, SkipPrevious } from '@mui/icons-material';
+import { useEffect, useRef, useState } from 'react';
 
 const theme = createTheme({
   palette: {
@@ -28,9 +28,37 @@ const theme = createTheme({
   }
 })
 
+export const usePlayerControls = () => {
+  const [playing, setPlaying] = useState(false)
+  const [src, setSrc] = useState<string>("")
+  const [queue, setQueue] = useState<string[]>([])
+  const [history, setHistory] = useState<string[]>([])
+  const addToQueue = (src: string) => {
+    setQueue([...queue, src])
+  }
+  return { playing, setPlaying, src, setSrc, queue, setQueue, addToQueue, history, setHistory }
+}
+
 export default function App({ Component, pageProps }: AppProps) {
   const footer = useRef<null | HTMLDivElement>(null)
-  const [showFooter, setShowFooter] = useState(false)
+  const pl = usePlayerControls()
+  const player = useRef<HTMLAudioElement | null>(null)
+
+  useEffect(() => {
+    if (player.current) {
+      if (pl.playing) {
+        player.current?.play()
+      } else {
+        player.current?.pause()
+      }
+    }
+  }, [pl.playing])
+
+  useEffect(() => {
+    if (player.current) {
+      player.current.src = pl.src
+    }
+  }, [pl.src])
 
   return (<>
     <Head>
@@ -46,7 +74,7 @@ export default function App({ Component, pageProps }: AppProps) {
           <Component {...pageProps} />
         </main >
       </Container>
-      <footer ref={footer} style={{ position: 'fixed', bottom: 0, width: '100vw', transition: "height .2s", height: showFooter ? 66 : 0 }}>
+      <footer ref={footer} style={{ position: 'fixed', bottom: 0, width: '100vw', transition: "height .2s", height: pl.src ? 66 : 0 }}>
         <Paper>
           <Container sx={(theme) => ({ padding: theme.spacing(1), flex: 1 })}>
             <Stack direction="row" alignItems="center" justifyContent="space-between">
@@ -57,13 +85,32 @@ export default function App({ Component, pageProps }: AppProps) {
                 </Typography>
               </Stack>
               <Stack direction="row">
-                <IconButton>
+                <IconButton onClick={() => {
+                  pl.setSrc("")
+                  pl.setPlaying(false)
+                }}>
+                  <Cancel />
+                </IconButton>
+                <IconButton onClick={() => {
+                  if (player.current) {
+                    if (player.current.currentTime > 5) { player.current.currentTime = 0 } else {
+                      if (pl.history.length > 0) {
+                        pl.setSrc(pl.history[pl.history.length - 1])
+                        pl.setHistory(pl.history.slice(0, pl.history.length - 1))
+                      } else {
+                        player.current.currentTime = 0
+                      }
+                    }
+                  }
+                }}>
                   <SkipPrevious />
                 </IconButton>
-                <IconButton>
-                  <PlayArrow />
+                <IconButton onClick={() => pl.setPlaying(!pl.playing)}>
+                  {pl.playing ? <Pause /> : <PlayArrow />}
                 </IconButton>
-                <IconButton>
+                <IconButton onClick={() => {
+                  if (player.current) player.current.currentTime = player.current.duration
+                }}>
                   <SkipNext />
                 </IconButton>
               </Stack>
@@ -71,6 +118,15 @@ export default function App({ Component, pageProps }: AppProps) {
           </Container>
         </Paper>
       </footer>
+      <audio autoPlay ref={player} id='global-player' src={pl.src} onPause={() => pl.setPlaying(false)} onPlay={() => pl.setPlaying(true)} onEnded={() => {
+        pl.setHistory([...pl.history, pl.src])
+        if (pl.queue.length > 0) {
+          pl.setSrc(pl.queue[0])
+          pl.setQueue(pl.queue.slice(1))
+        } else {
+          pl.setSrc("")
+        }
+      }} />
     </ThemeProvider >
   </>)
 }
