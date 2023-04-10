@@ -174,7 +174,7 @@ export default function App({ Component, pageProps }: AppProps) {
                   </Typography>
                 </Stack>
                 <Stack spacing={2} alignItems="center" direction="row">
-                  <Stack direction="row" alignItems="center">
+                  <Stack spacing={2} direction="row" alignItems="center">
                     {breakControls ?
                       <>
                         <IconButton ref={controlsAnchor} onClick={() => setControlsOpen(true)}>
@@ -224,7 +224,7 @@ export default function App({ Component, pageProps }: AppProps) {
                       : <>
                         <Stack spacing={2} direction="row" alignItems="center">
                           <VolumeDown />
-                          <Slider color='secondary' sx={{ width: '3rem' }} max={100} min={0} aria-label="Volume" value={pl.volume} onChange={(e, v) => pl.setVolume(v as number)} />
+                          <Slider color='secondary' sx={{ width: '5rem' }} max={100} min={0} aria-label="Volume" value={pl.volume} onChange={(e, v) => pl.setVolume(v as number)} />
                           <VolumeUp />
                         </Stack>
                         <IconButton onClick={playerActions.cancel}>
