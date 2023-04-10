@@ -19,7 +19,7 @@ const pages = [
         href: '/',
     }, {
         name: 'Könyvtár',
-        href: '/library',
+        href: '/collections/all',
     }
 ];
 
@@ -36,7 +36,7 @@ function ResponsiveAppBar() {
     };
 
     return (
-        <AppBar position="static">
+        <AppBar position="static" sx={{backgroundImage: 'unset'}}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     <CollectionsBookmark sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />

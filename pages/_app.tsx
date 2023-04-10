@@ -11,7 +11,7 @@ import ResponsiveAppBar from '@/components/nav';
 const theme = createTheme({
   palette: {
     mode: 'dark',
-    contrastThreshold: 3,
+    contrastThreshold: 5,
     primary: {
       main: '#f71735',
     },
@@ -19,8 +19,8 @@ const theme = createTheme({
       main: '#41ead4',
     },
     background: {
-      paper: 'black',
-      default: '#011627',
+      paper: '#000000',
+      default: '#161616',
     }
   }
 })

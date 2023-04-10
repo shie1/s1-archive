@@ -10,8 +10,9 @@ import Avatar from '@mui/material/Avatar';
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { red } from '@mui/material/colors';
-import { Speaker, PlayArrow, Share } from "@mui/icons-material";
+import { Speaker, PlayArrow, Share, Person } from "@mui/icons-material";
 import { Stack } from '@mui/material';
+import Link from 'next/link';
 
 interface ExpandMoreProps extends IconButtonProps {
     expand: boolean;
@@ -28,7 +29,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
     }),
 }));
 
-export default function LibraryCard({ name, group, image, date, items, type, description }: { name: string, group: string, image: string, date: Date, items: number, type: number, description: string }) {
+export default function LibraryCard({ id, name, group, image, date, items, type, description, group_id }: { id: number, name: string, group: string, image?: string, date: string, items: number, type: number, description: string, group_id: number }) {
     const [expanded, setExpanded] = React.useState(false);
 
     const handleExpandClick = () => {
@@ -36,6 +37,7 @@ export default function LibraryCard({ name, group, image, date, items, type, des
     };
 
     return (
+
         <Card sx={{ maxWidth: 345 }}>
             <CardHeader
                 avatar={
@@ -49,26 +51,33 @@ export default function LibraryCard({ name, group, image, date, items, type, des
                     </Avatar>
                 }
                 action={
-                    <IconButton aria-label="settings">
-                        <PlayArrow />
-                    </IconButton>
+                    <Stack direction="row">
+                        <IconButton aria-label="group" LinkComponent={Link} href={`/groups/${group_id}`}>
+                            <Person />
+                        </IconButton>
+                        <IconButton aria-label="settings">
+                            <PlayArrow />
+                        </IconButton>
+                    </Stack>
                 }
                 title={group}
-                subheader={date.toDateString()}
+                subheader={(new Date(date)).toDateString()}
             />
-            <CardMedia
+            {!image ? <></> : <CardMedia
                 component="img"
                 image={image}
                 alt={name}
-            />
-            <CardContent>
-                <Typography variant="h5" component="div">
-                    {name}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                    {description}
-                </Typography>
-            </CardContent>
+            />}
+            <Link style={{ cursor: 'pointer' }} href={`/collections/${id}`}>
+                <CardContent>
+                    <Typography variant="h5" component="div">
+                        {name}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                        {description}
+                    </Typography>
+                </CardContent>
+            </Link>
             <CardActions sx={{ justifyContent: "right" }} disableSpacing>
                 <Typography variant="body2" color="text.secondary">
                     A kollekció {items} elemet tartalmaz

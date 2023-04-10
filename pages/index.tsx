@@ -27,7 +27,7 @@ const Home: NextPage = () => {
         <span> egy helyen.</span>
       </Typography>
       <Stack direction='row'>
-        <Button size="large" variant='contained' href='library' LinkComponent={Link}>Felfedezés</Button>
+        <Button size="large" variant='contained' href='/collections/all' LinkComponent={Link}>Felfedezés</Button>
       </Stack>
     </Stack>
   </>)
