@@ -5,11 +5,11 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import { Container, ThemeProvider, createTheme, CssBaseline, Paper, Stack, Typography, IconButton } from '@mui/material';
+import { Container, ThemeProvider, createTheme, CssBaseline, Paper, Stack, Typography, IconButton, Button } from '@mui/material';
 import ResponsiveAppBar from '@/components/nav';
 import Image from 'next/image';
 import { PlayArrow, SkipNext, SkipPrevious } from '@mui/icons-material';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 const theme = createTheme({
   palette: {
@@ -30,6 +30,7 @@ const theme = createTheme({
 
 export default function App({ Component, pageProps }: AppProps) {
   const footer = useRef<null | HTMLDivElement>(null)
+  const [showFooter, setShowFooter] = useState(false)
 
   return (<>
     <Head>
@@ -45,7 +46,7 @@ export default function App({ Component, pageProps }: AppProps) {
           <Component {...pageProps} />
         </main >
       </Container>
-      <footer ref={footer} style={{ position: 'fixed', bottom: 0, width: '100vw' }}>
+      <footer ref={footer} style={{ position: 'fixed', bottom: 0, width: '100vw', transition: "height .2s", height: showFooter ? 66 : 0 }}>
         <Paper>
           <Container sx={(theme) => ({ padding: theme.spacing(1), flex: 1 })}>
             <Stack direction="row" alignItems="center" justifyContent="space-between">
@@ -71,6 +72,5 @@ export default function App({ Component, pageProps }: AppProps) {
         </Paper>
       </footer>
     </ThemeProvider >
-    <source id='global-player' />
   </>)
 }

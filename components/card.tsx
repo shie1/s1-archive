@@ -41,7 +41,7 @@ export default function LibraryCard({ id, name, group, image, date, items, type,
                         <IconButton aria-label="group" LinkComponent={Link} href={`/groups/${group_id}`}>
                             <Person />
                         </IconButton>
-                        <IconButton aria-label="settings">
+                        <IconButton aria-label="play">
                             <PlayArrow />
                         </IconButton>
                     </Stack>
