@@ -13,6 +13,8 @@ import { red } from '@mui/material/colors';
 import { MusicNote, PlayArrow, Share, Person } from "@mui/icons-material";
 import { Stack } from '@mui/material';
 import Link from 'next/link';
+import { PlayerContext } from '@/pages/_app';
+import { apiCall } from './api';
 
 interface ExpandMoreProps extends IconButtonProps {
     expand: boolean;
@@ -30,6 +32,8 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 }));
 
 export default function LibraryCard({ id, name, group, image, date, items, type, description, group_id, group_image }: { id: number, name: string, group: string, image?: string, date: string, items: number, type: number, description: string, group_id: number, group_image?: string }) {
+    const player = React.useContext(PlayerContext);
+
     return (
         <Card sx={{ maxWidth: 345 }}>
             <CardHeader
@@ -41,7 +45,14 @@ export default function LibraryCard({ id, name, group, image, date, items, type,
                         <IconButton aria-label="group" LinkComponent={Link} href={`/groups/${group_id}`}>
                             <Person />
                         </IconButton>
-                        <IconButton aria-label="play">
+                        <IconButton aria-label="play" onClick={() => {
+                            apiCall("GET", "/api/collections/" + id).then((data) => {
+                                if (player) {
+                                    player.setHistory([])
+                                    player.setQueue(data.items);
+                                }
+                            })
+                        }}>
                             <PlayArrow />
                         </IconButton>
                     </Stack>
