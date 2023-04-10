@@ -63,12 +63,12 @@ export default function LibraryCard({ id, name, group, image, date, items, type,
                 title={group}
                 subheader={(new Date(date)).toDateString()}
             />
-            {!image ? <></> : <CardMedia
-                component="img"
-                image={image}
-                alt={name}
-            />}
             <Link style={{ cursor: 'pointer' }} href={`/collections/${id}`}>
+                <CardMedia
+                    component="img"
+                    image={image ? image : `/img/collections/${id}.jpg`}
+                    alt={name}
+                />
                 <CardContent>
                     <Typography variant="h5" component="div">
                         {name}
