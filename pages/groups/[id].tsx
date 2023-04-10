@@ -26,7 +26,7 @@ const Group: NextPage = (props: any) => {
             <Stack>
                 <Stack direction="row">
 
-                    <Typography variant="h1">{group.name}</Typography>
+                    <Typography variant="h2" component="h1">{group.name}</Typography>
                 </Stack>
                 <Typography variant="body1">{group.description}</Typography>
             </Stack>

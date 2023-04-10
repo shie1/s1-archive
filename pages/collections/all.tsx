@@ -2,7 +2,7 @@ import LibraryCard from "@/components/card";
 import type { NextPage } from "next";
 import { ImageList, ImageListItem, useTheme, useMediaQuery } from "@mui/material"
 import { apiCall } from "@/components/api";
-import { collection } from "../api/collections/all";
+import { collectionSummary } from "../api/collections/all";
 
 const Library: NextPage = (props: any) => {
     const theme = useTheme()
@@ -19,7 +19,7 @@ const Library: NextPage = (props: any) => {
                     return 3
             }
         })()} gap={8}>
-            {(props.collections as Array<collection>).map((item, index) => {
+            {(props.collections as Array<collectionSummary>).map((item, index) => {
                 return (<ImageListItem sx={{ display: 'flex', justifyContent: 'center' }} key={index}>
                     <LibraryCard {...item} />
                 </ImageListItem>)
