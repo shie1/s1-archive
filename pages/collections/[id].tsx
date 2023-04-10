@@ -31,7 +31,7 @@ const Collection: NextPage = (props: any) => {
         </Head>
         <Stack direction={breakImage ? "column" : "row"} spacing={2} alignItems="center">
             <StyledBadge badgeContent={collection.items.length} color="secondary" overlap="rectangular" anchorOrigin={{ horizontal: 'right', vertical: 'top' }}>
-                <Image alt={collection.collection.name} height={250} width={250} src={collection.collection.image ? collection.collection.image : `/img/collections/${collection.collection.id}.jpg`}></Image>
+                <Image alt={collection.collection.name} height={250} width={250} src={collection.collection.image ? collection.collection.image : `https://cdn.jsdelivr.net/gh/shie1/s1-archive-files/collections/${collection.collection.id}.jpg`}></Image>
             </StyledBadge>
             <Stack>
                 <Stack direction="row" alignItems="center" spacing={1}>

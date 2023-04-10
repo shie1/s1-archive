@@ -5,10 +5,10 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import { Container, ThemeProvider, createTheme, CssBaseline, Paper, Stack, Typography, IconButton, Button } from '@mui/material';
+import { Container, ThemeProvider, createTheme, CssBaseline, Paper, Stack, Typography, IconButton, Button, Slider, useTheme, useMediaQuery } from '@mui/material';
 import ResponsiveAppBar from '@/components/nav';
 import Image from 'next/image';
-import { Cancel, CancelOutlined, Pause, PlayArrow, SkipNext, SkipPrevious } from '@mui/icons-material';
+import { Cancel, CancelOutlined, Pause, PlayArrow, SkipNext, SkipPrevious, VolumeDown, VolumeUp } from '@mui/icons-material';
 import { createContext, useEffect, useRef, useState } from 'react';
 import { content } from './api/collections/[id]';
 
@@ -34,12 +34,13 @@ export const usePlayerControls = () => {
   const [src, setSrc] = useState<string>("")
   const [queue, setQueue] = useState<content[]>([])
   const [history, setHistory] = useState<content[]>([])
+  const [volume, setVolume] = useState<number>(100)
   const addToQueue = (content: content) => {
     setQueue([...queue, content])
   }
   const [content, setContent] = useState<undefined | content>(undefined)
 
-  return { playing, setPlaying, src, setSrc, queue, setQueue, addToQueue, history, setHistory, content, setContent }
+  return { playing, setPlaying, src, setSrc, queue, setQueue, addToQueue, history, setHistory, content, setContent, volume, setVolume }
 }
 
 export type playerControls = {
@@ -54,6 +55,8 @@ export type playerControls = {
   setHistory: (history: content[]) => void
   content: undefined | content
   setContent: (content: undefined | content) => void
+  volume: number
+  setVolume: (volume: number) => void
 }
 
 export const PlayerContext = createContext<undefined | playerControls>(undefined)
@@ -62,6 +65,7 @@ export default function App({ Component, pageProps }: AppProps) {
   const footer = useRef<null | HTMLDivElement>(null)
   const pl = usePlayerControls()
   const player = useRef<HTMLAudioElement | null>(null)
+  const breakControls = useMediaQuery("max-width: 750px")
 
   useEffect(() => {
     if (player.current) {
@@ -81,7 +85,9 @@ export default function App({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     if (pl.content) {
-      pl.setSrc(`https://cdn.jsdelivr.net/gh/shie1/s1-archive-files/${pl.content.id}.mp3`)
+      pl.setSrc(`https://cdn.jsdelivr.net/gh/shie1/s1-archive-files/content/${pl.content.id}.mp3`)
+    } else {
+      pl.setSrc("")
     }
   }, [pl.content])
 
@@ -93,6 +99,12 @@ export default function App({ Component, pageProps }: AppProps) {
       }
     }
   }, [pl.queue])
+
+  useEffect(() => {
+    if (player.current) {
+      player.current.volume = pl.volume / 100
+    }
+  }, [pl.volume])
 
   return (<>
     <Head>
@@ -115,37 +127,45 @@ export default function App({ Component, pageProps }: AppProps) {
             <Container sx={(theme) => ({ padding: theme.spacing(1), flex: 1 })}>
               <Stack direction="row" alignItems="center" justifyContent="space-between">
                 <Stack direction="row" alignItems="center" spacing={2}>
-                  <Image src={pl.content?.image ? pl.content.image : `/img/collections/${pl.content?.collection_id}.jpg`} alt="" width={50} height={50} />
-                  <Typography fontSize="1.5rem" variant="body1" color="text.secondary">
+                  {!pl.content ? <></> : <Image src={pl.content?.image ? pl.content.image : `https://cdn.jsdelivr.net/gh/shie1/s1-archive-files/collections/${pl.content?.collection_id}.jpg`} alt="" width={50} height={50} />}
+                  <Typography sx={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }} fontSize="1.5rem" variant="body1" color="text.secondary">
                     {pl.content?.name}
                   </Typography>
                 </Stack>
-                <Stack direction="row">
-                  <IconButton onClick={() => {
-                    pl.setSrc("")
-                    pl.setPlaying(false)
-                  }}>
-                    <Cancel />
-                  </IconButton>
-                  <IconButton onClick={() => {
-                    if (player.current) {
-                      if (pl.content) pl.setQueue([pl.content, ...pl.queue])
-                      if (pl.history.length > 0) {
-                        pl.setContent(pl.history[pl.history.length - 1])
-                        pl.setHistory(pl.history.slice(0, pl.history.length - 1))
+                <Stack spacing={2} alignItems="center" direction="row">
+                  <Stack spacing={2} direction="row" alignItems="center">
+                    <VolumeDown />
+                    <Slider color='secondary' sx={{ width: '3rem' }} step={25} max={100} min={0} aria-label="Volume" value={pl.volume} onChange={(e, v) => pl.setVolume(v as number)} />
+                    <VolumeUp />
+                  </Stack>
+                  <Stack direction="row" alignItems="center">
+                    <IconButton onClick={() => {
+                      pl.setQueue([])
+                      pl.setHistory([])
+                      pl.setContent(undefined)
+                    }}>
+                      <Cancel />
+                    </IconButton>
+                    <IconButton onClick={() => {
+                      if (player.current) {
+                        if (pl.content) pl.setQueue([pl.content, ...pl.queue])
+                        if (pl.history.length > 0) {
+                          pl.setContent(pl.history[pl.history.length - 1])
+                          pl.setHistory(pl.history.slice(0, pl.history.length - 1))
+                        }
                       }
-                    }
-                  }}>
-                    <SkipPrevious />
-                  </IconButton>
-                  <IconButton onClick={() => pl.setPlaying(!pl.playing)}>
-                    {pl.playing ? <Pause /> : <PlayArrow />}
-                  </IconButton>
-                  <IconButton onClick={() => {
-                    if (player.current) player.current.currentTime = player.current.duration
-                  }}>
-                    <SkipNext />
-                  </IconButton>
+                    }}>
+                      <SkipPrevious />
+                    </IconButton>
+                    <IconButton onClick={() => pl.setPlaying(!pl.playing)}>
+                      {pl.playing ? <Pause /> : <PlayArrow />}
+                    </IconButton>
+                    <IconButton onClick={() => {
+                      if (player.current) player.current.currentTime = player.current.duration
+                    }}>
+                      <SkipNext />
+                    </IconButton>
+                  </Stack>
                 </Stack>
               </Stack>
             </Container>

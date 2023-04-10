@@ -34,7 +34,7 @@ export default function LibraryCard({ id, name, group, image, date, items, type,
         <Card sx={{ maxWidth: 345 }}>
             <CardHeader
                 avatar={
-                    <Avatar sx={{ bgcolor: red[500] }} src={image ? image : `/img/groups/${group_id}.jpg`} aria-label="recipe">{group}</Avatar>
+                    <Avatar sx={{ bgcolor: red[500] }} src={image ? image : `https://cdn.jsdelivr.net/gh/shie1/s1-archive-files/groups/${group_id}.jpg`} aria-label="recipe">{group}</Avatar>
                 }
                 action={
                     <Stack direction="row">
@@ -52,7 +52,7 @@ export default function LibraryCard({ id, name, group, image, date, items, type,
             <Link style={{ cursor: 'pointer' }} href={`/collections/${id}`}>
                 <CardMedia
                     component="img"
-                    image={image ? image : `/img/collections/${id}.jpg`}
+                    image={image ? image : `https://cdn.jsdelivr.net/gh/shie1/s1-archive-files/collections/${id}.jpg`}
                     alt={name}
                 />
                 <CardContent>

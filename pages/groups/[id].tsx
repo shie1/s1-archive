@@ -25,11 +25,10 @@ const Group: NextPage = (props: any) => {
         </Head>
         <Stack direction={breakImage ? "column" : "row"} spacing={2} alignItems="center">
             <StyledBadge badgeContent={group.items} color="secondary" overlap="circular" anchorOrigin={{ horizontal: 'right', vertical: 'top' }}>
-                <Avatar sx={(theme) => ({ width: 250, height: 250 })} src={group.image ? group.image : `/img/groups/${group.id}.jpg`}></Avatar>
+                <Avatar sx={(theme) => ({ width: 250, height: 250 })} src={group.image ? group.image : `https://cdn.jsdelivr.net/gh/shie1/s1-archive-files/groups/${group.id}.jpg`}></Avatar>
             </StyledBadge>
             <Stack>
                 <Stack direction="row">
-
                     <Typography variant="h2" component="h1">{group.name}</Typography>
                 </Stack>
                 <Typography variant="body1">{group.description}</Typography>
