@@ -5,10 +5,32 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import { Container, ThemeProvider, createTheme, CssBaseline, Paper, Stack, Typography, IconButton, Button, Slider, useTheme, useMediaQuery, Menu, MenuItem } from '@mui/material';
+import {
+  Container,
+  ThemeProvider,
+  createTheme,
+  CssBaseline,
+  Paper,
+  Stack,
+  Typography,
+  IconButton,
+  Slider,
+  useMediaQuery,
+  Menu,
+  MenuItem,
+} from '@mui/material';
 import ResponsiveAppBar from '@/components/nav';
 import Image from 'next/image';
-import { ArrowDropUp, Cancel, CancelOutlined, MoreVert, Pause, PlayArrow, SkipNext, SkipPrevious, Stop, VolumeDown, VolumeUp } from '@mui/icons-material';
+import {
+  MoreVert,
+  Pause,
+  PlayArrow,
+  SkipNext,
+  SkipPrevious,
+  Stop,
+  VolumeDown,
+  VolumeUp,
+} from '@mui/icons-material';
 import { createContext, useEffect, useRef, useState } from 'react';
 import { content } from './api/collections/[id]';
 

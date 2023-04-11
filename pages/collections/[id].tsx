@@ -1,12 +1,12 @@
 import { apiCall } from "@/components/api";
 import type { NextPage } from "next";
-import { collection } from "../api/collections/[id]";
 import Image from "next/image";
 import { Badge, BadgeProps, Stack, Table, TableHead, TableRow, TableBody, Typography, styled, useMediaQuery, useTheme, TableCell, IconButton } from "@mui/material";
 import { PlayArrow, Queue } from "@mui/icons-material";
-import { PlayerContext, usePlayerControls } from "../_app";
+import { PlayerContext } from "../_app";
 import { useContext } from "react";
 import Head from "next/head";
+import { collection } from "../api/collections/[id]";
 
 const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
     '& .MuiBadge-badge': {
@@ -28,6 +28,20 @@ const Collection: NextPage = (props: any) => {
     return (<>
         <Head>
             <title>{collection.collection.name} • archv</title>
+            <meta name="description" content={collection.collection.description} />
+            {/* Facebook Meta Tags */}
+            <meta property="og:url" content={`https://archive.shie1bi.hu/collections/${collection.collection.id}`} />
+            <meta property="og:type" content="website" />
+            <meta property="og:title" content={`${collection.collection.group} • ${collection.collection.name} (${(new Date(collection.collection.date)).getFullYear()})`} />
+            <meta property="og:description" content={collection.collection.description} />
+            <meta property="og:image" content={collection.collection.image ? collection.collection.image : `https://cdn.jsdelivr.net/gh/shie1/s1-archive-files/collections/${collection.collection.id}.jpg`} />
+            {/* Twitter Meta Tags */}
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta property="twitter:domain" content="archive.shie1bi.hu" />
+            <meta property="twitter:url" content={`https://archive.shie1bi.hu/collections/${collection.collection.id}`} />
+            <meta name="twitter:title" content={`${collection.collection.group} • ${collection.collection.name} (${(new Date(collection.collection.date)).getFullYear()})`} />
+            <meta name="twitter:description" content={collection.collection.description} />
+            <meta name="twitter:image" content={collection.collection.image ? collection.collection.image : `https://cdn.jsdelivr.net/gh/shie1/s1-archive-files/collections/${collection.collection.id}.jpg`} />
         </Head>
         <Stack direction={breakImage ? "column" : "row"} spacing={2} alignItems="center">
             <StyledBadge badgeContent={collection.items.length} color="secondary" overlap="rectangular" anchorOrigin={{ horizontal: 'right', vertical: 'top' }}>

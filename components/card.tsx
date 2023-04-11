@@ -5,7 +5,6 @@ import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
-import Collapse from '@mui/material/Collapse';
 import Avatar from '@mui/material/Avatar';
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
@@ -87,7 +86,9 @@ export default function LibraryCard({ id, name, group, image, date, items, type,
                 <Typography variant="body2" color="text.secondary">
                     A kollekció {items} elemet tartalmaz
                 </Typography>
-                <IconButton aria-label="share">
+                <IconButton aria-label="share" onClick={() => {
+                    navigator.share({ url: `https://archive.shie1bi.hu/collections/${id}` })
+                }}>
                     <Share />
                 </IconButton>
             </CardActions>
