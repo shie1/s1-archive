@@ -18,6 +18,7 @@ import {
   useMediaQuery,
   Menu,
   MenuItem,
+  Grid,
 } from '@mui/material';
 import ResponsiveAppBar from '@/components/nav';
 import Image from 'next/image';
@@ -96,6 +97,7 @@ export default function App({ Component, pageProps }: AppProps) {
   const breakControls = useMediaQuery("(max-width: 800px)")
   const [controlsOpen, setControlsOpen] = useState(false)
   const controlsAnchor = useRef<null | any>(null)
+  const brokenControlsBreak = useMediaQuery("(max-width: 350px)")
 
   const playerActions = {
     togglePlay: () => {
@@ -224,33 +226,43 @@ export default function App({ Component, pageProps }: AppProps) {
                               <VolumeUp />
                             </Stack>
                           </MenuItem>
-                          <Stack direction="row" justifyContent="space-between" sx={{ width: '100%' }}>
-                            <MenuItem onClick={playerActions.cancel}>
-                              <Stack spacing={2} direction="row-reverse" alignItems="center" sx={(theme) => ({ padding: theme.spacing(.5), width: '100%' })}>
-                                <Stop />
-                              </Stack>
-                            </MenuItem>
-                            <MenuItem onClick={playerActions.previous}>
-                              <Stack spacing={2} direction="row-reverse" alignItems="center" sx={(theme) => ({ padding: theme.spacing(.5), width: '100%' })}>
-                                <SkipPrevious />
-                              </Stack>
-                            </MenuItem>
-                            <MenuItem onClick={playerActions.togglePlay}>
-                              <Stack spacing={2} direction="row-reverse" alignItems="center" sx={(theme) => ({ padding: theme.spacing(.5), width: '100%' })}>
-                                {pl.playing ? <Pause /> : <PlayArrow />}
-                              </Stack>
-                            </MenuItem>
-                            <MenuItem onClick={playerActions.next}>
-                              <Stack spacing={2} direction="row-reverse" alignItems="center" sx={(theme) => ({ padding: theme.spacing(.5), width: '100%' })}>
-                                <SkipNext />
-                              </Stack>
-                            </MenuItem>
-                            <MenuItem onClick={playerActions.toggleRepeat}>
-                              <Stack spacing={2} direction="row-reverse" alignItems="center" sx={(theme) => ({ padding: theme.spacing(.5), width: '100%' })}>
-                                {pl.repeat === 0 ? <Repeat /> : pl.repeat === 1 ? <RepeatOne /> : <RepeatOnRounded />}
-                              </Stack>
-                            </MenuItem>
-                          </Stack>
+                          <Grid container justifyContent="center">
+                            <Grid item justifyContent="center" alignItems="center" xs={brokenControlsBreak ? undefined : 2}>
+                              <MenuItem onClick={playerActions.previous}>
+                                <Stack spacing={2} alignItems="center" sx={(theme) => ({ padding: theme.spacing(.5), width: '100%' })}>
+                                  <SkipPrevious />
+                                </Stack>
+                              </MenuItem>
+                            </Grid>
+                            <Grid item justifyContent="center" alignItems="center" xs={brokenControlsBreak ? undefined : 2}>
+                              <MenuItem onClick={playerActions.togglePlay}>
+                                <Stack spacing={2} alignItems="center" sx={(theme) => ({ padding: theme.spacing(.5), width: '100%' })}>
+                                  {pl.playing ? <Pause /> : <PlayArrow />}
+                                </Stack>
+                              </MenuItem>
+                            </Grid>
+                            <Grid item justifyContent="center" alignItems="center" xs={brokenControlsBreak ? undefined : 2}>
+                              <MenuItem onClick={playerActions.next}>
+                                <Stack spacing={2} alignItems="center" sx={(theme) => ({ padding: theme.spacing(.5), width: '100%' })}>
+                                  <SkipNext />
+                                </Stack>
+                              </MenuItem>
+                            </Grid>
+                            <Grid item justifyContent="center" alignItems="center" xs={brokenControlsBreak ? 6 : 2}>
+                              <MenuItem onClick={playerActions.cancel}>
+                                <Stack spacing={2} alignItems="center" sx={(theme) => ({ padding: theme.spacing(.5), width: '100%' })}>
+                                  <Stop />
+                                </Stack>
+                              </MenuItem>
+                            </Grid>
+                            <Grid item justifyContent="center" alignItems="center" xs={brokenControlsBreak ? 6 : 2}>
+                              <MenuItem onClick={playerActions.toggleRepeat}>
+                                <Stack spacing={2} alignItems="center" sx={(theme) => ({ padding: theme.spacing(.5), width: '100%' })}>
+                                  {pl.repeat === 0 ? <Repeat /> : pl.repeat === 1 ? <RepeatOne /> : <RepeatOnRounded />}
+                                </Stack>
+                              </MenuItem>
+                            </Grid>
+                          </Grid>
                         </Menu>
                       </>
                       : <>
