@@ -1,13 +1,13 @@
 import LibraryCard from "@/components/card";
 import type { NextPage } from "next";
-import { ImageList, ImageListItem, useTheme, useMediaQuery } from "@mui/material"
+import { useTheme, Grid, useMediaQuery } from "@mui/material"
 import { apiCall } from "@/components/api";
 import { collectionSummary } from "../api/collections/all";
 import Head from "next/head";
 
 const Library: NextPage = (props: any) => {
     const theme = useTheme()
-    const breakList = [useMediaQuery(theme.breakpoints.down('sm')), useMediaQuery(theme.breakpoints.down('md'))]
+    const centerGrid = useMediaQuery(theme.breakpoints.down('sm'))
 
     return (<>
         <Head>
@@ -25,22 +25,13 @@ const Library: NextPage = (props: any) => {
             <meta name="twitter:title" content="Könyvtár • archv from Shie1bi" />
             <meta name="twitter:description" content='Az összes luvzee, Shie1bi, Benskies és xX_gyuszyu_Xx dal egy helyen.' />
         </Head>
-        <ImageList variant="masonry" cols={(() => {
-            switch (breakList.indexOf(true)) {
-                case 0:
-                    return 1
-                case 1:
-                    return 2
-                default:
-                    return 3
-            }
-        })()} gap={8}>
+        <Grid display="flex" justifyContent={centerGrid ? "center" : "left"} alignItems="center" container spacing={4}>
             {(props.collections as Array<collectionSummary>).map((item, index) => {
-                return (<ImageListItem sx={{ display: 'flex', justifyContent: 'center' }} key={index}>
+                return (<Grid item lg={4} md={6} sm={12} key={index} display="flex" justifyContent="center" alignItems="center">
                     <LibraryCard {...item} />
-                </ImageListItem>)
+                </Grid>)
             })}
-        </ImageList>
+        </Grid>
     </>)
 }
 
