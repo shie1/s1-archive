@@ -25,6 +25,9 @@ import {
   MoreVert,
   Pause,
   PlayArrow,
+  Repeat,
+  RepeatOnRounded,
+  RepeatOne,
   SkipNext,
   SkipPrevious,
   Stop,
@@ -57,12 +60,13 @@ export const usePlayerControls = () => {
   const [queue, setQueue] = useState<content[]>([])
   const [history, setHistory] = useState<content[]>([])
   const [volume, setVolume] = useState<number>(100)
+  const [repeat, setRepeat] = useState<0 | 1 | 2>(0)
   const addToQueue = (content: content) => {
     setQueue([...queue, content])
   }
   const [content, setContent] = useState<undefined | content>(undefined)
 
-  return { playing, setPlaying, src, setSrc, queue, setQueue, addToQueue, history, setHistory, content, setContent, volume, setVolume }
+  return { playing, setPlaying, src, setSrc, queue, setQueue, addToQueue, history, setHistory, content, setContent, volume, setVolume, repeat, setRepeat }
 }
 
 export type playerControls = {
@@ -79,6 +83,8 @@ export type playerControls = {
   setContent: (content: undefined | content) => void
   volume: number
   setVolume: (volume: number) => void
+  repeat: 0 | 1 | 2
+  setRepeat: (repeat: 0 | 1 | 2) => void
 }
 
 export const PlayerContext = createContext<undefined | playerControls>(undefined)
@@ -87,7 +93,7 @@ export default function App({ Component, pageProps }: AppProps) {
   const footer = useRef<null | HTMLDivElement>(null)
   const pl = usePlayerControls()
   const player = useRef<HTMLAudioElement | null>(null)
-  const breakControls = useMediaQuery("(max-width: 750px)")
+  const breakControls = useMediaQuery("(max-width: 800px)")
   const [controlsOpen, setControlsOpen] = useState(false)
   const controlsAnchor = useRef<null | any>(null)
 
@@ -121,6 +127,9 @@ export default function App({ Component, pageProps }: AppProps) {
     },
     toggleControls: () => {
       setControlsOpen(!controlsOpen)
+    },
+    toggleRepeat: () => {
+      pl.setRepeat(((pl.repeat + 1) % 3) as any)
     },
   }
 
@@ -219,25 +228,26 @@ export default function App({ Component, pageProps }: AppProps) {
                             <MenuItem onClick={playerActions.cancel}>
                               <Stack spacing={2} direction="row-reverse" alignItems="center" sx={(theme) => ({ padding: theme.spacing(.5), width: '100%' })}>
                                 <Stop />
-                                Megállítás
                               </Stack>
                             </MenuItem>
                             <MenuItem onClick={playerActions.previous}>
                               <Stack spacing={2} direction="row-reverse" alignItems="center" sx={(theme) => ({ padding: theme.spacing(.5), width: '100%' })}>
                                 <SkipPrevious />
-                                Előző
                               </Stack>
                             </MenuItem>
                             <MenuItem onClick={playerActions.togglePlay}>
                               <Stack spacing={2} direction="row-reverse" alignItems="center" sx={(theme) => ({ padding: theme.spacing(.5), width: '100%' })}>
                                 {pl.playing ? <Pause /> : <PlayArrow />}
-                                Lejátszás/Szünet
                               </Stack>
                             </MenuItem>
                             <MenuItem onClick={playerActions.next}>
                               <Stack spacing={2} direction="row-reverse" alignItems="center" sx={(theme) => ({ padding: theme.spacing(.5), width: '100%' })}>
                                 <SkipNext />
-                                Következő
+                              </Stack>
+                            </MenuItem>
+                            <MenuItem onClick={playerActions.toggleRepeat}>
+                              <Stack spacing={2} direction="row-reverse" alignItems="center" sx={(theme) => ({ padding: theme.spacing(.5), width: '100%' })}>
+                                {pl.repeat === 0 ? <Repeat /> : pl.repeat === 1 ? <RepeatOne /> : <RepeatOnRounded />}
                               </Stack>
                             </MenuItem>
                           </Stack>
@@ -252,6 +262,9 @@ export default function App({ Component, pageProps }: AppProps) {
                         <IconButton onClick={playerActions.cancel}>
                           <Stop />
                         </IconButton>
+                        <IconButton onClick={playerActions.toggleRepeat}>
+                          {pl.repeat === 0 ? <Repeat /> : pl.repeat === 1 ? <RepeatOne /> : <RepeatOnRounded />}
+                        </IconButton>
                         <IconButton onClick={playerActions.previous}>
                           <SkipPrevious />
                         </IconButton>
@@ -260,21 +273,44 @@ export default function App({ Component, pageProps }: AppProps) {
                         </IconButton>
                         <IconButton onClick={playerActions.next}>
                           <SkipNext />
-                        </IconButton></>}
+                        </IconButton>
+                      </>}
                   </Stack>
                 </Stack>
               </Stack>
             </Container>
           </Paper>
         </footer>
-        <audio autoPlay ref={player} id='global-player' src={pl.src} onPause={() => pl.setPlaying(false)} onPlay={() => pl.setPlaying(true)} onEnded={() => {
-          if (pl.content) pl.setHistory([...pl.history, pl.content])
-          if (pl.queue.length > 0) {
-            pl.setContent(pl.queue[0])
-            pl.setQueue(pl.queue.slice(1))
-          } else {
-            pl.setContent(undefined)
-            setControlsOpen(false)
+        <audio loop={pl.repeat === 1} autoPlay ref={player} id='global-player' src={pl.src} onPause={() => pl.setPlaying(false)} onPlay={() => pl.setPlaying(true)} onEnded={() => {
+          switch (pl.repeat) {
+            case 1:
+              // repeat one song
+              break
+            case 2:
+              // repeat queue and history
+              if (player) {
+                if (pl.content) pl.setHistory([...pl.history, pl.content])
+                if (pl.queue.length > 0) {
+                  pl.setContent(pl.queue[0])
+                  pl.setQueue(pl.queue.slice(1))
+                } else {
+                  pl.setContent(pl.history[0])
+                  // set queue to remaining history
+                  pl.setQueue(pl.history.slice(1))
+                  pl.setHistory([])
+                }
+              }
+              break
+            case 0:
+              if (pl.content) pl.setHistory([...pl.history, pl.content])
+              if (pl.queue.length > 0) {
+                pl.setContent(pl.queue[0])
+                pl.setQueue(pl.queue.slice(1))
+              } else {
+                pl.setContent(undefined)
+                setControlsOpen(false)
+              }
+              break
           }
         }} />
       </PlayerContext.Provider>
