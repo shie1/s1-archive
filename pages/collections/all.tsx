@@ -14,14 +14,14 @@ const Library: NextPage = (props: any) => {
             <title>Könyvtár • archv</title>
             <meta name="description" content='Az összes luvzee, Shie1bi, Benskies és xX_gyuszyu_Xx dal egy helyen.' />
             {/* Facebook Meta Tags */}
-            <meta property="og:url" content="https://archive.shie1bi.hu/collections/all" />
+            <meta property="og:url" content="https://archv.shie1bi.hu/collections/all" />
             <meta property="og:type" content="website" />
             <meta property="og:title" content="Könyvtár • archv from Shie1bi" />
             <meta property="og:description" content='Az összes luvzee, Shie1bi, Benskies és xX_gyuszyu_Xx dal egy helyen.' />
             {/* Twitter Meta Tags */}
             <meta name="twitter:card" content="summary_large_image" />
-            <meta property="twitter:domain" content="archive.shie1bi.hu" />
-            <meta property="twitter:url" content="https://archive.shie1bi.hu/collections/all" />
+            <meta property="twitter:domain" content="archv.shie1bi.hu" />
+            <meta property="twitter:url" content="https://archv.shie1bi.hu/collections/all" />
             <meta name="twitter:title" content="Könyvtár • archv from Shie1bi" />
             <meta name="twitter:description" content='Az összes luvzee, Shie1bi, Benskies és xX_gyuszyu_Xx dal egy helyen.' />
         </Head>
@@ -37,7 +37,7 @@ const Library: NextPage = (props: any) => {
 
 Library.getInitialProps = async () => {
     return {
-        collections: await apiCall("GET", `${process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://archive.shie1bi.hu"}/api/collections/all`)
+        collections: await apiCall("GET", `${process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://archv.shie1bi.hu"}/api/collections/all`)
     }
 }
 

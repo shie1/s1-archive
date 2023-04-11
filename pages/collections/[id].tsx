@@ -30,15 +30,15 @@ const Collection: NextPage = (props: any) => {
             <title>{collection.collection.name} • archv</title>
             <meta name="description" content={collection.collection.description} />
             {/* Facebook Meta Tags */}
-            <meta property="og:url" content={`https://archive.shie1bi.hu/collections/${collection.collection.id}`} />
+            <meta property="og:url" content={`https://archv.shie1bi.hu/collections/${collection.collection.id}`} />
             <meta property="og:type" content="website" />
             <meta property="og:title" content={`${collection.collection.group} • ${collection.collection.name} (${(new Date(collection.collection.date)).getFullYear()})`} />
             <meta property="og:description" content={collection.collection.description} />
             <meta property="og:image" content={collection.collection.image ? collection.collection.image : `https://cdn.jsdelivr.net/gh/shie1/s1-archive-files/collections/${collection.collection.id}.jpg`} />
             {/* Twitter Meta Tags */}
             <meta name="twitter:card" content="summary_large_image" />
-            <meta property="twitter:domain" content="archive.shie1bi.hu" />
-            <meta property="twitter:url" content={`https://archive.shie1bi.hu/collections/${collection.collection.id}`} />
+            <meta property="twitter:domain" content="archv.shie1bi.hu" />
+            <meta property="twitter:url" content={`https://archv.shie1bi.hu/collections/${collection.collection.id}`} />
             <meta name="twitter:title" content={`${collection.collection.group} • ${collection.collection.name} (${(new Date(collection.collection.date)).getFullYear()})`} />
             <meta name="twitter:description" content={collection.collection.description} />
             <meta name="twitter:image" content={collection.collection.image ? collection.collection.image : `https://cdn.jsdelivr.net/gh/shie1/s1-archive-files/collections/${collection.collection.id}.jpg`} />
@@ -103,7 +103,7 @@ const Collection: NextPage = (props: any) => {
 
 Collection.getInitialProps = async (ctx) => {
     return {
-        collection: await apiCall("GET", `${process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://archive.shie1bi.hu"}/api/collections/${ctx.query.id}`)
+        collection: await apiCall("GET", `${process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://archv.shie1bi.hu"}/api/collections/${ctx.query.id}`)
     }
 };
 

@@ -87,7 +87,7 @@ export default function LibraryCard({ id, name, group, image, date, items, type,
                     A kollekció {items} elemet tartalmaz
                 </Typography>
                 <IconButton aria-label="share" onClick={() => {
-                    navigator.share({ url: `https://archive.shie1bi.hu/collections/${id}` })
+                    navigator.share({ url: `https://archv.shie1bi.hu/collections/${id}` })
                 }}>
                     <Share />
                 </IconButton>

@@ -24,15 +24,15 @@ const Group: NextPage = (props: any) => {
             <title>{group.name} • archv</title>
             <meta name="description" content={group.description} />
             {/* Facebook Meta Tags */}
-            <meta property="og:url" content={`https://archive.shie1bi.hu/groups/${group.id}`} />
+            <meta property="og:url" content={`https://archv.shie1bi.hu/groups/${group.id}`} />
             <meta property="og:type" content="website" />
             <meta property="og:title" content={group.name} />
             <meta property="og:description" content={group.description} />
             <meta property="og:image" content={group.image ? group.image : `https://cdn.jsdelivr.net/gh/shie1/s1-archive-files/groups/${group.id}.jpg`} />
             {/* Twitter Meta Tags */}
             <meta name="twitter:card" content="summary_large_image" />
-            <meta property="twitter:domain" content="archive.shie1bi.hu" />
-            <meta property="twitter:url" content={`https://archive.shie1bi.hu/groups/${group.id}`} />
+            <meta property="twitter:domain" content="archv.shie1bi.hu" />
+            <meta property="twitter:url" content={`https://archv.shie1bi.hu/groups/${group.id}`} />
             <meta name="twitter:title" content={group.name} />
             <meta name="twitter:description" content={group.description} />
             <meta name="twitter:image" content={group.image ? group.image : `https://cdn.jsdelivr.net/gh/shie1/s1-archive-files/groups/${group.id}.jpg`} />
@@ -53,7 +53,7 @@ const Group: NextPage = (props: any) => {
 
 Group.getInitialProps = async (ctx) => {
     return {
-        group: await apiCall("GET", `${process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://archive.shie1bi.hu"}/api/groups/${ctx.query.id}`)
+        group: await apiCall("GET", `${process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://archv.shie1bi.hu"}/api/groups/${ctx.query.id}`)
     }
 }
 
