@@ -1,10 +1,12 @@
-import { Button, Typography, Stack, Divider, Box } from '@mui/material'
+import { Button, Typography, Stack, Divider, Box, useMediaQuery } from '@mui/material'
 import type { NextPage } from 'next'
 import Link from 'next/link'
 import { TypeAnimation } from 'react-type-animation'
 import Head from 'next/head';
 
 const Home: NextPage = () => {
+  const disableAnimation = useMediaQuery("(max-width: 800px)")
+
   return (<>
     <Head>
       <title>archv</title>
@@ -29,18 +31,19 @@ const Home: NextPage = () => {
       </Stack>
       <Typography variant='h2' component="h2">
         <span>Minden </span>
-        <TypeAnimation sequence={[
-          'luvzee',
-          1000,
-          'Shie1bi',
-          1000,
-          'Benskies',
-          1000,
-          'gyuszyu',
-          1000,
-          'dal',
-          2000
-        ]} wrapper='span' repeat={Infinity} cursor={false} />
+        {disableAnimation ? <span>dal</span> :
+          <TypeAnimation sequence={[
+            'luvzee',
+            1000,
+            'Shie1bi',
+            1000,
+            'Benskies',
+            1000,
+            'gyuszyu',
+            1000,
+            'dal',
+            2000
+          ]} wrapper='span' repeat={Infinity} cursor={false} />}
         <span> egy helyen.</span>
       </Typography>
       <Stack direction='row'>
