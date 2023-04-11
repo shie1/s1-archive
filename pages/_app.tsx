@@ -96,7 +96,6 @@ export default function App({ Component, pageProps }: AppProps) {
   const player = useRef<HTMLAudioElement | null>(null)
   const breakControls = useMediaQuery("(max-width: 800px)")
   const [controlsOpen, setControlsOpen] = useState(false)
-  const controlsAnchor = useRef<null | any>(null)
   const brokenControlsBreak = useMediaQuery("(max-width: 350px)")
 
   const playerActions = {
@@ -210,14 +209,22 @@ export default function App({ Component, pageProps }: AppProps) {
                   <Stack spacing={2} direction="row" alignItems="center">
                     {breakControls ?
                       <>
-                        <IconButton ref={controlsAnchor} onClick={() => setControlsOpen(true)}>
+                        <IconButton onClick={() => setControlsOpen(true)}>
                           <MoreVert />
                         </IconButton>
                         <Menu
                           open={controlsOpen}
                           onClose={() => setControlsOpen(false)}
-                          anchorEl={controlsAnchor.current}
+                          anchorEl={footer.current}
                           sx={{ '& .MuiPaper-root': { width: '100vw' } }}
+                          transformOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'left',
+                          }}
+                          anchorOrigin={{
+                            vertical: 'top',
+                            horizontal: 'left',
+                          }}
                         >
                           <MenuItem>
                             <Stack sx={{ width: '100%' }} spacing={2} direction="row" alignItems="center">

@@ -4,6 +4,7 @@ const nextConfig = {
   images: {
     domains: ['cdn.jsdelivr.net']
   },
+  staticPageGenerationTimeout: 120,
 }
 
 module.exports = nextConfig
